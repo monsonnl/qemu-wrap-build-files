@@ -30,7 +30,7 @@ RUN ln -s sh cross-build-end
 
 #------------------------------------------
 
-FROM build_base as build_arm64
+FROM build_base as build_arm64v8
 # Build the qemu binaries
 RUN mkdir build
 WORKDIR /qemu/build
@@ -50,16 +50,16 @@ RUN ../configure --disable-bsd-user --disable-guest-agent --disable-strip --disa
 RUN make
 
 # setup arch directory
-RUN mkdir -p /cross-build/arm64/usr/bin
-WORKDIR /cross-build/arm64/usr/bin
-COPY --from=build_go /cross-build/cross-build /cross-build/arm64/usr/bin/cross-build
+RUN mkdir -p /cross-build/arm64v8/usr/bin
+WORKDIR /cross-build/arm64v8/usr/bin
+COPY --from=build_go /cross-build/cross-build /cross-build/arm64v8/usr/bin/cross-build
 RUN ln -s cross-build cross-build-start
 RUN ln -s cross-build cross-build-end
-RUN cp /qemu/build/aarch64-linux-user/qemu-aarch64 /cross-build/arm64/usr/bin/qemu-static
+RUN cp /qemu/build/aarch64-linux-user/qemu-aarch64 /cross-build/arm64v8/usr/bin/qemu-static
 
 #------------------------------------------
 
-FROM build_base as build_arm32
+FROM build_base as build_arm32v7
 # Build the qemu binaries
 RUN mkdir build
 WORKDIR /qemu/build
@@ -79,12 +79,12 @@ RUN ../configure --disable-bsd-user --disable-guest-agent --disable-strip --disa
 RUN make
 
 # setup arch directory
-RUN mkdir -p /cross-build/arm32/usr/bin
-WORKDIR /cross-build/arm32/usr/bin
-COPY --from=build_go /cross-build/cross-build /cross-build/arm32/usr/bin/cross-build
+RUN mkdir -p /cross-build/arm32v7/usr/bin
+WORKDIR /cross-build/arm32v7/usr/bin
+COPY --from=build_go /cross-build/cross-build /cross-build/arm32v7/usr/bin/cross-build
 RUN ln -s cross-build cross-build-start
 RUN ln -s cross-build cross-build-end
-RUN cp /qemu/build/arm-linux-user/qemu-arm /cross-build/arm32/usr/bin/qemu-static
+RUN cp /qemu/build/arm-linux-user/qemu-arm /cross-build/arm32v7/usr/bin/qemu-static
 
 #------------------------------------------
 # Build the actual image:
@@ -92,5 +92,5 @@ RUN cp /qemu/build/arm-linux-user/qemu-arm /cross-build/arm32/usr/bin/qemu-stati
 FROM alpine:latest
 # copy our architecture directories
 COPY --from=build_x86_64 /cross-build /cross-build
-COPY --from=build_arm32 /cross-build /cross-build
-COPY --from=build_arm64 /cross-build /cross-build
+COPY --from=build_arm32v7 /cross-build /cross-build
+COPY --from=build_arm64v8 /cross-build /cross-build
