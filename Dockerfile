@@ -25,9 +25,8 @@ FROM build_base as build_x86_64
 # setup arch directory
 RUN mkdir -p /cross-build/x86_64/usr/bin
 WORKDIR /cross-build/x86_64/usr/bin
-RUN cp /bin/sh cross-build
-RUN ln -s cross-build cross-build-start
-RUN ln -s cross-build cross-build-end
+RUN ln -s sh cross-build-start
+RUN ln -s sh cross-build-end
 
 #------------------------------------------
 
