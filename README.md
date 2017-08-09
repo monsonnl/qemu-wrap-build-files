@@ -8,7 +8,7 @@ a source in  multi-stage builds to "COPY --from" the qemu and cross build binari
 
 ## Using the container
 
-There are files for arm32 and arm64 architectures in /cross-build/< arm32 | arm64 >/usr/bin.  Dummy
+There are files for arm32 and arm64 architectures in /cross-build/< arm32v7 | arm64v8 >/usr/bin.  Dummy
 files for x86_64 are also included so that parameterized Dockerfiles can be built
 that are identical for all architectures.  The following example demonstrates:
 
@@ -40,10 +40,10 @@ docker build Dockerfile .
 docker build --build-arg ARCH_DIR=x86_64 --build-arg ARCH_IMG=docker.io/debian:stretch .
 
 # for arm32
-docker build --build-arg ARCH_DIR=arm32 --build-arg ARCH_IMG=docker.io/arm32v7/debian:stretch .
+docker build --build-arg ARCH_DIR=arm32v7 --build-arg ARCH_IMG=docker.io/arm32v7/debian:stretch .
 
 # for arm64
-docker build --build-arg ARCH_DIR=arm64 --build-arg ARCH_IMG=docker.io/arm64v8/debian:stretch .
+docker build --build-arg ARCH_DIR=arm64v8 --build-arg ARCH_IMG=docker.io/arm64v8/debian:stretch .
 ```
 
 ## Extending to additional architectures
