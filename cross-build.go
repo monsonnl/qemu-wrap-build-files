@@ -20,7 +20,7 @@ func crossBuildStart() {
 		log.Fatal(err)
 	}
 
-	err = os.Link("/usr/bin/cross-build", "/bin/sh")
+	err = os.Link("/bin/cross-build", "/bin/sh")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -40,7 +40,7 @@ func crossBuildEnd() {
 func runShell() error {
 	var cmd *exec.Cmd
 
-	cmd = exec.Command("/usr/bin/qemu-static", append([]string{"-execve", "-0", os.Args[0], "/bin/sh"}, os.Args[1:]...)...)
+	cmd = exec.Command("/bin/qemu-static", append([]string{"-execve", "-0", os.Args[0], "/bin/sh"}, os.Args[1:]...)...)
 
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout

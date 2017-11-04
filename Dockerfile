@@ -23,10 +23,10 @@ RUN git checkout resin-2.9.0
 
 FROM build_base as build_x86_64
 # setup arch directory
-RUN mkdir -p /cross-build/x86_64/usr/bin
-WORKDIR /cross-build/x86_64/usr/bin
-RUN ln -s sh cross-build-start
-RUN ln -s sh cross-build-end
+RUN mkdir -p /cross-build/x86_64/bin
+WORKDIR /cross-build/x86_64/bin
+RUN echo "#!/bin/sh" >cross-build-start && chmod +x cross-build-start
+RUN echo "#!/bin/sh" >cross-build-end && chmod +x cross-build-end
 
 #------------------------------------------
 
@@ -50,12 +50,12 @@ RUN ../configure --disable-bsd-user --disable-guest-agent --disable-strip --disa
 RUN make
 
 # setup arch directory
-RUN mkdir -p /cross-build/arm64v8/usr/bin
-WORKDIR /cross-build/arm64v8/usr/bin
-COPY --from=build_go /cross-build/cross-build /cross-build/arm64v8/usr/bin/cross-build
+RUN mkdir -p /cross-build/arm64v8/bin
+WORKDIR /cross-build/arm64v8/bin
+COPY --from=build_go /cross-build/cross-build /cross-build/arm64v8/bin/cross-build
 RUN ln -s cross-build cross-build-start
 RUN ln -s cross-build cross-build-end
-RUN cp /qemu/build/aarch64-linux-user/qemu-aarch64 /cross-build/arm64v8/usr/bin/qemu-static
+RUN cp /qemu/build/aarch64-linux-user/qemu-aarch64 /cross-build/arm64v8/bin/qemu-static
 
 #------------------------------------------
 
@@ -79,12 +79,12 @@ RUN ../configure --disable-bsd-user --disable-guest-agent --disable-strip --disa
 RUN make
 
 # setup arch directory
-RUN mkdir -p /cross-build/arm32v7/usr/bin
-WORKDIR /cross-build/arm32v7/usr/bin
-COPY --from=build_go /cross-build/cross-build /cross-build/arm32v7/usr/bin/cross-build
+RUN mkdir -p /cross-build/arm32v7/bin
+WORKDIR /cross-build/arm32v7/bin
+COPY --from=build_go /cross-build/cross-build /cross-build/arm32v7/bin/cross-build
 RUN ln -s cross-build cross-build-start
 RUN ln -s cross-build cross-build-end
-RUN cp /qemu/build/arm-linux-user/qemu-arm /cross-build/arm32v7/usr/bin/qemu-static
+RUN cp /qemu/build/arm-linux-user/qemu-arm /cross-build/arm32v7/bin/qemu-static
 
 #------------------------------------------
 # Build the actual image:
